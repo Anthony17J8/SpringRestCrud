@@ -48,10 +48,24 @@ public class CustomerRestController {
 
     // add mapping for PUT /customers - update existing customer
     @PutMapping("/customers")
-    public Customer updateCustomer(@RequestBody Customer theCustomer){
+    public Customer updateCustomer(@RequestBody Customer theCustomer) {
 
         customerService.saveCustomer(theCustomer);
 
         return theCustomer;
+    }
+
+    // add mapping for DELETE /customers/{customerId} - delete customer
+    @DeleteMapping("/customers/{customerId}")
+    public String deleteCustomer(@PathVariable int customerId) {
+
+        Customer tempCustomer = customerService.getCustomer(customerId);
+
+        if (tempCustomer == null) {
+            throw new CustomerNotFoundException("Customer id not found: " + customerId);
+        }
+
+        customerService.deleteCustomer(customerId);
+        return "Deleted customer id: " + customerId;
     }
 }
